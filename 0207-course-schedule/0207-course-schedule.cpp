@@ -1,36 +1,38 @@
 class Solution {
-    bool isCycle(vector<vector<int>>&adj,vector<int>&vis,int curr)
-    {
-        if(vis[curr]==2){     //if being processed (processing)
-            return 1;
-        }
-        
-        vis[curr]=2;   //processing
-        
-        for(int i=0;i<adj[curr].size();i++){
-            if(vis[adj[curr][i]]!=1){    //if the adjoining directed nodes are not processed
-                if(isCycle(adj,vis,adj[curr][i]))   return true;
-            }
-        }
-        
-        vis[curr]=1;    //processed
-        return false;
-    }
 public:
-    bool canFinish(int courses, vector<vector<int>>& prereq) {
-//         making directed graph
-        vector<vector<int>>adj(courses);
-        for(int i=0;i<prereq.size();i++)   adj[prereq[i][0]].push_back(prereq[i][1]);
+    bool canFinish(int num, vector<vector<int>>& preq) {
         
-        vector<int>vis(courses,0);   //not visited
+        int n=preq.size();
+        vector<vector<int>>adj(num);
+        vector<int>indeg(num);
         
-        for(int i=0;i<courses;i++){
-            if(!vis[i]){    //not visited
-                if(isCycle(adj,vis,i))   return false;
-            }
-            
+        vector<int>vis(num,0);
+        
+        for(auto &e:preq){
+            adj[e[1]].push_back(e[0]);
+            indeg[e[0]]++;
         }
         
-        return true;
+        queue<int>q;
+        
+for(int i=0;i<indeg.size();i++){
+    if(indeg[i]==0)  q.push(i);
+}
+        
+//         bfs for topo sort
+        int notvis=0;
+        while(!q.empty()){
+                int node=q.front();
+                q.pop();
+            notvis++;
+                
+                for(auto &x:adj[node]){
+                    indeg[x]--;
+                    if(indeg[x]==0)
+                    q.push(x);
+                }
+        }
+        // cout<<num<<" "<<notvis; 
+        return num==notvis;
     }
 };
