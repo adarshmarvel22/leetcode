@@ -11,7 +11,7 @@ public:
         if(mp.find(nxtval)!=mp.end()){
             auto nxtidx = upper_bound(mp[nxtval].begin(),mp[nxtval].end(),idx);
             if(nxtidx!=mp[nxtval].end()){
-                res = max(res,1+helper(*nxtidx,arr,diff));
+                res = 1+helper(*nxtidx,arr,diff);
             }
         }
         helper(idx+1,arr,diff);
